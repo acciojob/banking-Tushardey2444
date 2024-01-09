@@ -9,10 +9,17 @@ public class CurrentAccount extends BankAccount{
         super(name,balance,5000);
 
         this.tradeLicenseId=tradeLicenseId;
+        if(balance<500){
+            throw new Exception("Insufficient Balance");
+        }
     }
 
     public String getTradeLicenseId() {
         return tradeLicenseId;
+    }
+
+    public void setTradeLicenseId(String tradeLicenseId) {
+        this.tradeLicenseId = tradeLicenseId;
     }
 
     public void validateLicenseId() throws Exception {
@@ -28,6 +35,59 @@ public class CurrentAccount extends BankAccount{
             }
         }
 
+        if(!flag){
+            int[] freq=new int[26];
+            int max=0;
+            char Ch='A';
+            int n=tradeLicenseId.length();
+            for(char ch:tradeLicenseId.toCharArray()){
+                freq[ch-'A']++;
+                if(freq[ch-'A']>max){
+                    max=freq[ch-'A'];
+                    Ch=ch;
+                }
+            }
+            if(max>((n+1)/2)){
+                throw new Exception("Valid License can not be generated");
+            }
 
+            char[] ans=new char[tradeLicenseId.length()];
+            int idx=0;
+            while(max>0){
+                ans[idx]=Ch;
+                idx+=2;
+                if(idx>=ans.length){
+                    idx=1;
+                }
+                max--;
+                if(max==0){
+                    freq[Ch-'A']=0;
+                    Pair p=maxFreq(freq);
+                    max=p.max;
+                    Ch=p.ch;
+                }
+            }
+            this.tradeLicenseId=new String(ans);
+        }
+    }
+    public Pair maxFreq(int[] arr){
+        char ch='A';
+        int max=0;
+        for(int i=0;i<26;i++){
+            if(arr[i]>max){
+                max=arr[i];
+                ch=(char)(i+'A');
+            }
+        }
+        return new Pair(max,ch);
+    }
+}
+class Pair{
+    int max;
+    char ch;
+
+    public Pair(int max, char ch) {
+        this.max = max;
+        this.ch = ch;
     }
 }
