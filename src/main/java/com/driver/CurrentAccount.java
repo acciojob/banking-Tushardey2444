@@ -27,9 +27,7 @@ public class CurrentAccount extends BankAccount{
                 break;
             }
         }
-        if(!flag){
-            
-        }
+
 
     }
 }
